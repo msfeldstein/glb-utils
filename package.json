@@ -1,0 +1,26 @@
+{
+  "name": "glbutils",
+  "version": "1.0.0",
+  "description": "Utility for inspecting and modifying gltf binary files",
+  "main": "glb-utils.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "glb-utils": "./glb-utils.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/msfeldstein/glb-utils.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/msfeldstein/glb-utils/issues"
+  },
+  "homepage": "https://github.com/msfeldstein/glb-utils#readme",
+  "dependencies": {
+    "copy-paste": "^1.3.0",
+    "node-menu": "^1.3.0"
+  }
+}

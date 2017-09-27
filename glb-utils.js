@@ -1,4 +1,6 @@
-const ncp = require("copy-paste");
+#!/usr/bin/env node
+
+const ncp = require("copy-paste")
 const GLBParser = require('./glb-parser')
 const GLBWriter = require('./glb-writer')
 const menu = require('node-menu')
