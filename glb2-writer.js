@@ -4,7 +4,18 @@ const constants = require('./glb2-constants')
 const bufferForFour = (n) => {
   return 4 - (n % 4)
 }
+/*
 
+glb is {
+  magic: String
+  version: Number
+  length: Full Length of file in bytes (opt)
+  content: JSON as String
+  json: JSON as Object
+  buffers: array of node buffers
+  binary_glTF: the main binary buffer
+}
+*/
 module.exports = function(glb, outfile) {
   const json = glb.content
   const buffers = glb.buffers
@@ -15,9 +26,9 @@ module.exports = function(glb, outfile) {
   // Keep binary offsets at multiples of 4
   const emptySpace = 4 - (contentLength % 4)
   let totalLength = constants.JSON_START + contentLength + emptySpace
-  Object.keys(buffers).forEach((name) => {
+  buffers.forEach((buffer) => {
     totalLength += 8 // Chunk header data
-    totalLength += buffers[name].length + bufferForFour(buffers[name].length)
+    totalLength += buffer.length + bufferForFour(buffer.length)
   })
   // const outputBuffer = Buffer.alloc(constants.JSON_START + contentLength + emptySpace)
   const outputBuffer = Buffer.alloc(totalLength)
@@ -41,7 +52,6 @@ module.exports = function(glb, outfile) {
   // Write all buffers
   Object.keys(buffers).forEach((key) => {
     const buffer = buffers[key]
-    console.log("Writing ", key, " at ", i)
     const emptySpace = bufferForFour(buffer.length)
     i = outputBuffer.writeUInt32LE(buffer.length + emptySpace, i, 4)
     i = outputBuffer.writeUInt32LE(constants.BINARY_CHUNK_TYPE, i, 4)
