@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
 const ncp = require("copy-paste")
-const GLBParser = require('./glb-parser')
-const GLBWriter = require('./glb-writer')
+const GLBParser = require('./glb2-parser')
+const GLBWriter = require('./glb2-writer')
 const menu = require('node-menu')
 
 const infile = process.argv[2]
