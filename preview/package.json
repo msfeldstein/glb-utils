@@ -1,0 +1,17 @@
+{
+  "name": "preview",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "budo": "^10.0.4",
+    "three": "^0.87.1",
+    "three-orbit-controls": "^82.1.0"
+  }
+}

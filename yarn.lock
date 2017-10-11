@@ -30,6 +30,10 @@ copy-paste@^1.3.0:
   optionalDependencies:
     sync-exec "~0.6.x"
 
+draco3d@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/draco3d/-/draco3d-1.1.0.tgz#5a82ed188e9e8be231ce98a82421023a56429f51"
+
 find-replace@^1.0.3:
   version "1.0.3"
   resolved "https://www.mpk934.com/registry/find-replace/-/find-replace-1.0.3.tgz#b88e7364d2d9c959559f388c66670d6130441fa0"
