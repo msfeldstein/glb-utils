@@ -8,4 +8,5 @@ const output = src.replace(".gltf", ".glb")
 console.log(`>> Converting ${src} to ${output}`)
 
 const glb = GLBPacker(src)
+
 GLBWriter(glb, output)
