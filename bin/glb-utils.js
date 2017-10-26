@@ -33,5 +33,4 @@ menu.addItem(`Write GLB To ${outfile}`, function() {
   GLBWriter(glb, outfile)
 })
 menu.addItem('View JSON', require('../actions/print-json'), glb)
-// menu.addItem('Bounding Box', require('../actions/bounding-box'), glb)
 menu.start()
