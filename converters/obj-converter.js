@@ -1,6 +1,6 @@
 const fs = require('fs')
 const path = require('path')
-const GLBWriter = require('../glb2-writer')
+const GLBWriter = require('../glb-writer')
 const readline = require('readline')
 
 const opts = require('command-line-args')([

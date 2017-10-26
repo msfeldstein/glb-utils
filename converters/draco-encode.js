@@ -1,7 +1,7 @@
 const fs = require('fs')
 const path = require('path')
-const {GLB, GLBParse, GLBWrite} = require('../glb2')
-const GLBWriter = require('../glb2-writer')
+const {GLB, GLBParse, GLBWrite} = require('../lib/glb')
+const GLBWriter = require('../lib/glb-writer')
 const readline = require('readline')
 const encoderModule = require('draco3d').createEncoderModule({})
 

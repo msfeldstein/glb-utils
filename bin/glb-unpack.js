@@ -2,7 +2,7 @@
 
 const fs = require('fs')
 const path = require('path')
-const GLBParser = require('../glb2-parser')
+const GLBParser = require('../glb-parser')
 
 const src = process.argv[2]
 const output = src.replace(".gltf", ".glb")
