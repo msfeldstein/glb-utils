@@ -1,13 +1,13 @@
 {
   "name": "glbutils",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Utility for inspecting and modifying gltf binary files",
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "bin": {
-    "glb-utils": "./glb-utils.js",
+    "glb-utils": "./bin/glb-utils.js",
     "glb-pack": "./bin/glb-pack.js",
     "glb-unpack": "./bin/glb-unpack.js"
   },
