@@ -10,13 +10,16 @@ console.log(`>> Unpacking ${src}`)
 
 const glb = GLBParser(src)
 
+const bufferPath = src.replace('.glb', '.bin')
+glb.json.buffers[0].uri = path.basename(bufferPath)
+
 const gltfName = src.replace('.glb', '.gltf')
 fs.writeFileSync(gltfName, JSON.stringify(glb.json, null, 2))
 console.log("Written", gltfName)
 
-const bufferOut = src.replace('.glb', '.bin')
-fs.writeFileSync(bufferOut, glb.buffers[0])
-console.log("Written", bufferOut)
+
+fs.writeFileSync(bufferPath, glb.buffers[0])
+console.log("Written", bufferPath)
 
 glb.json.images.forEach(function(image) {
   const imageOut = path.join(path.dirname(src), image.name)
