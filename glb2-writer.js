@@ -4,21 +4,11 @@ const constants = require('./glb2-constants')
 const bufferForFour = (n) => {
   return 4 - (n % 4)
 }
-/*
 
-glb is {
-  magic: String
-  version: Number
-  length: Full Length of file in bytes (opt)
-  content: JSON as String
-  json: JSON as Object
-  buffers: array of node buffers
-  binary_glTF: the main binary buffer
-}
-*/
 module.exports = function(glb, outfile) {
   const json = glb.content
   const buffers = glb.buffers
+
   var fd =  fs.openSync(outfile, 'w');
   // Calculate layout
   const contentBuffer = new Buffer(json)

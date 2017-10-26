@@ -5,6 +5,8 @@
  * @author Takahiro / https://github.com/takahirox
  * @author Don McCurdy / https://www.donmccurdy.com
  */
+const draco = require('draco3d')
+const dracoDecoder = draco.createDecoderModule({})
 
 THREE.GLTFLoader = ( function () {
 
@@ -1471,7 +1473,7 @@ THREE.GLTFLoader = ( function () {
 
 			}
 
-			texture.flipY = false;
+			texture.flipY = true;
 
 			if ( textureDef.name !== undefined ) texture.name = textureDef.name;
 
@@ -1681,16 +1683,113 @@ THREE.GLTFLoader = ( function () {
 
 	GLTFParser.prototype.loadGeometries = function ( primitives ) {
 
+		var parser = this;
+		
 		return this._withDependencies( [
 
-			'accessors',
+			'accessors'
 
-		] ).then( function ( dependencies ) {
+		] )
+		.then( function ( dependencies ) {
 
 			return _each( primitives, function ( primitive ) {
 
 				var geometry = new THREE.BufferGeometry();
-
+				
+				if (primitive.extensions && primitive.extensions.KHR_DRACO_MESH_COMPRESSION) {
+					console.log("DRACO", primitive.extensions.KHR_DRACO_MESH_COMPRESSION)
+					return parser.loadBufferView(primitive.extensions.KHR_DRACO_MESH_COMPRESSION.bufferView)
+					.then (function(rawBuffer) {
+						const buffer = new dracoDecoder.DecoderBuffer();
+						buffer.Init(new Int8Array(rawBuffer), rawBuffer.byteLength);
+						const decoder = new dracoDecoder.Decoder();
+						console.log("WRAPPER", decoder)
+						
+						if (decoder.GetEncodedGeometryType(buffer) == dracoDecoder.TRIANGULAR_MESH) {
+							const dracoGeometry = new dracoDecoder.Mesh()
+							decoder.DecodeBufferToMesh(buffer, dracoGeometry)
+							console.log(dracoGeometry)
+							
+							const numFaces = dracoGeometry.num_faces()
+							const numPoints = dracoGeometry.num_points()
+							const numVertexCoords = numPoints * 3
+							const numTexCoords = numPoints * 2
+							const numAttributes = dracoGeometry.num_attributes()
+							
+							function getFloatData(attribute) {
+								// const attrID = decoder.GetAttributeId(dracoGeometry, attribute)
+								const attrID = primitive.extensions.KHR_DRACO_MESH_COMPRESSION.attributes[attribute]
+								if (attrID == undefined) return null
+								const attr = decoder.GetAttribute(dracoGeometry, attrID)
+								const attrData = new dracoDecoder.DracoFloat32Array()
+								decoder.GetAttributeFloatForAllPoints(
+									dracoGeometry, attr, attrData
+								)
+								return attrData
+							}
+							
+							const positionAttributeData = getFloatData(dracoDecoder.POSITION)
+							const colorAttributeData = getFloatData(dracoDecoder.COLOR)
+							const normalAttributeData = getFloatData(dracoDecoder.NORMAL)
+							const texCoordAttributeData = getFloatData(dracoDecoder.TEX_COORD)
+							
+							const geometryBuffer = {
+								indices: new Uint32Array(numFaces * 3),
+								vertices: new Float32Array(numVertexCoords),
+								normals: new Float32Array(numVertexCoords),
+								uvs: new Float32Array(numVertexCoords),
+								colors: new Float32Array(numVertexCoords)
+							}
+							
+							for (let i = 0; i < numVertexCoords; i += 3) {
+								geometryBuffer.vertices[i] = positionAttributeData.GetValue(i)
+								geometryBuffer.vertices[i + 1] = positionAttributeData.GetValue(i + 1)
+								geometryBuffer.vertices[i + 2] = positionAttributeData.GetValue(i + 2)
+								console.log("Vertex", geometryBuffer.vertices[i], geometryBuffer.vertices[i + 1], geometryBuffer.vertices[i + 2])
+								geometryBuffer.colors[i] = 1.0
+								geometryBuffer.colors[i + 1] = 1.0
+								geometryBuffer.colors[i + 2] = 1.0
+								
+								geometryBuffer.normals[i] = normalAttributeData.GetValue(i)
+								geometryBuffer.normals[i + 1] = normalAttributeData.GetValue(i + 1)
+								geometryBuffer.normals[i + 2] = normalAttributeData.GetValue(i + 2)
+							}
+							
+							for (let i = 0; i < numTexCoords; i++) {
+								geometryBuffer.uvs[i] = texCoordAttributeData.GetValue(i)
+							}
+							
+							const ia = new dracoDecoder.DracoInt32Array()
+							for (let i = 0; i < numFaces; i++) {
+								decoder.GetFaceFromMesh(dracoGeometry, i, ia)
+								const index = i * 3
+								geometryBuffer.indices[index] = ia.GetValue(0)
+								geometryBuffer.indices[index + 1] = ia.GetValue(1)
+								geometryBuffer.indices[index + 2] = ia.GetValue(2)
+								
+							}
+							
+							const geometry = new THREE.BufferGeometry()
+							geometry.setIndex(new(geometryBuffer.indices.length > 65535 ?
+								THREE.Uint32BufferAttribute : THREE.Uint16BufferAttribute)
+								(geometryBuffer.indices, 1));
+							
+							geometry.addAttribute('position', new THREE.Float32BufferAttribute(geometryBuffer.vertices, 3))
+							// geometry.addAttribute('color', new THREE.Float32BufferAttribute(geometryBuffer.colors, 3))
+							geometry.addAttribute('normal', new THREE.Float32BufferAttribute(geometryBuffer.normals, 3))
+							geometry.addAttribute('uv', new THREE.Float32BufferAttribute(geometryBuffer.uvs, 2))
+							console.log("FACES", numFaces)
+							debugger
+							return geometry
+							
+						} else {
+							console.error("Cannot decode draco point clouds")
+						}
+						
+						
+					})
+				}
+				
 				var attributes = primitive.attributes;
 
 				for ( var attributeId in attributes ) {
@@ -1700,7 +1799,7 @@ THREE.GLTFLoader = ( function () {
 					if ( attributeEntry === undefined ) return;
 
 					var bufferAttribute = dependencies.accessors[ attributeEntry ];
-
+					
 					switch ( attributeId ) {
 
 						case 'POSITION':

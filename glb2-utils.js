@@ -6,7 +6,7 @@ const GLBWriter = require('./glb2-writer')
 const menu = require('node-menu')
 
 const infile = process.argv[2]
-const outfile = process.argv[3]
+const outfile = process.argv[3] || infile
 
 if (!infile) {
   console.log("Usage: node glb-utils.js path/to/glb-to-read path/to/glb-to-write")

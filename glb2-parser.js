@@ -18,9 +18,9 @@ module.exports = function(path) {
   console.log("Binary Len: " , binaryDataLength)
   const json = JSON.parse(content)
   const binary_glTF = buffer.slice(binaryChunkStart + 8)
-  const buffers = {
+  const buffers = [
     binary_glTF
-  }
+  ]
   
   return {
     magic,

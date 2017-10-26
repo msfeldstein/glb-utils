@@ -31,7 +31,7 @@ const pushFloats = function(arr, elements) {
 
 const pushFaces = function(arr, elements) {
   elements.forEach((el) => {
-    const index = el.split('/')[0]
+    const index = el.split('/')[0] - 1 // Index in obj indexes from 1 like a total goof
     arr.push(parseInt(index))
   })
 }
@@ -107,10 +107,8 @@ lineReader.on('close', () => {
   let buffer = Buffer.alloc(0)
   
   const addBufferData = (bufferData, accessor, isIndex) => {
-    
     const bufferLength = bufferData.byteLength
-    const padLength =  (4 - bufferData.byteLength % 4)
-    console.log(bufferData.byteLength, padLength)
+    const padLength =  (4 - bufferData.byteLength % 4) % 4
     const bufferView = {
       buffer: 0,
       byteOffset: buffer.byteLength,
@@ -160,7 +158,7 @@ lineReader.on('close', () => {
     name: "Indices",
     componentType: 5125, // Unsigned int
     type: "SCALAR",
-    count: indices.length - 5
+    count: indices.length
   }, true)
   console.log("Indices: ", indices.length)
   
