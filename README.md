@@ -8,7 +8,7 @@ Utility for inspecting and modifying gltf binary files
 
 # Usage
 
-./glb-utils path/to/glb-file.glb optional/path/to/write/to.glb
+`glb-utils path/to/glb-file.glb optional/path/to/write/to.glb`
 
 ## Features
 
