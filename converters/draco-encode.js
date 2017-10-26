@@ -1,6 +1,7 @@
 const fs = require('fs')
 const path = require('path')
-const {GLB, GLBParse, GLBWrite} = require('../lib/glb')
+const GLB = require('../lib/glb')
+const GLBParser = require('../lib/glb-parser')
 const GLBWriter = require('../lib/glb-writer')
 const readline = require('readline')
 const encoderModule = require('draco3d').createEncoderModule({})
@@ -15,7 +16,7 @@ const dst = opts.dst
 
 console.log(`>> Packaging ${src} into ${dst}`)
 
-const model = GLBParse(src)
+const model = GLBParser(src)
 
 const encoder = new encoderModule.Encoder();
 const meshBuilder = new encoderModule.MeshBuilder();
