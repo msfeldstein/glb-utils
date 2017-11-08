@@ -2,10 +2,9 @@
 
 const fs = require('fs')
 const path = require('path')
-const GLBParser = require('../glb-parser')
+const GLBParser = require('../lib/glb-parser')
 
 const src = process.argv[2]
-const output = src.replace(".gltf", ".glb")
 console.log(`>> Unpacking ${src}`)
 
 const glb = GLBParser(src)
@@ -17,15 +16,15 @@ const gltfName = src.replace('.glb', '.gltf')
 fs.writeFileSync(gltfName, JSON.stringify(glb.json, null, 2))
 console.log("Written", gltfName)
 
-
-fs.writeFileSync(bufferPath, glb.buffers[0])
+fs.writeFileSync(bufferPath, glb.buffer)
 console.log("Written", bufferPath)
 
+let nextNameIndex = 0
 glb.json.images.forEach(function(image) {
-  const imageOut = path.join(path.dirname(src), image.name)
+  const imageOut = image.name ? path.join(path.dirname(src), image.name) : `${nextNameIndex++}.${image.mimeType.split('/')[1]}`
   const bufferView = glb.json.bufferViews[image.bufferView]
   const buffer = glb.buffers[bufferView.buffer]
   const imageData = Buffer.from(buffer, bufferView.byteOffset, bufferView.byteLength)
   fs.writeFileSync(imageOut, imageData)
-  console.log("Written", imageOut)
+  console.log("Written ", imageOut)
 })
