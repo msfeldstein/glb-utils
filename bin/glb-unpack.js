@@ -21,10 +21,11 @@ console.log("Written", bufferPath)
 
 let nextNameIndex = 0
 glb.json.images.forEach(function(image) {
-  const imageOut = image.name ? path.join(path.dirname(src), image.name) : `${nextNameIndex++}.${image.mimeType.split('/')[1]}`
+  const imageOut = path.join(path.dirname(src), image.name ? image.name : `${nextNameIndex++}.${image.mimeType.split('/')[1]}`)
   const bufferView = glb.json.bufferViews[image.bufferView]
   const buffer = glb.buffers[bufferView.buffer]
-  const imageData = Buffer.from(buffer, bufferView.byteOffset, bufferView.byteLength)
+  const imageData = Buffer.alloc(bufferView.byteLength)
+  buffer.copy(imageData, 0, bufferView.byteOffset, bufferView.byteOffset + bufferView.byteLength)
   fs.writeFileSync(imageOut, imageData)
   console.log("Written ", imageOut)
 })
