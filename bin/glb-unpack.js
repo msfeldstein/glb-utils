@@ -22,7 +22,7 @@ console.log("Written", bufferPath)
 let nextNameIndex = 0
 if (glb.json.images) {
   glb.json.images.forEach(function(image) {
-    const imageOut = path.join(path.dirname(src), image.name ? image.name : `${nextNameIndex++}.${image.mimeType.split('/')[1]}`)
+    const imageOut = path.join(path.dirname(src), image.name ? image.name : `${nextNameIndex++}.${image.mimeType ? image.mimeType.split('/')[1] : 'png'}`)
     const bufferView = glb.json.bufferViews[image.bufferView]
     const buffer = glb.buffers[bufferView.buffer]
     const imageData = Buffer.alloc(bufferView.byteLength)
