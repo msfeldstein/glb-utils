@@ -1,6 +1,6 @@
 {
   "name": "glbutils",
-  "version": "1.1.2",
+  "version": "1.2.0",
   "description": "Utility for inspecting and modifying gltf binary files",
   "main": "main.js",
   "scripts": {
