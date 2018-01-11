@@ -10,7 +10,8 @@
   "bin": {
     "glb-utils": "./bin/glb-utils.js",
     "glb-pack": "./bin/glb-pack.js",
-    "glb-unpack": "./bin/glb-unpack.js"
+    "glb-unpack": "./bin/glb-unpack.js",
+    "glb-make-unlit": "./bin/glb-make-unlit.js"
   },
   "repository": {
     "type": "git",
