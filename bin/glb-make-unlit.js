@@ -14,7 +14,6 @@ glb.json.extensionsUsed = glb.json.extensionsUsed || []
 glb.json.extensionsUsed.push("KHR_materials_common")
 glb.json.extensionsUsed.push("KHR_materials_unlit")
 
-console.log(glb.json.materials)
 glb.json.materials.forEach((m) => {
 	m.extensions = m.extensions || {}
 	m.extensions.KHR_materials_common = {
@@ -22,7 +21,6 @@ glb.json.materials.forEach((m) => {
 	}
 	m.extensions.KHR_materials_unlit = {}
 })
-console.log(glb.json.materials)
 
 const output = src.replace('.glb', '.unlit.glb')
 GLBWriter(glb, output)
