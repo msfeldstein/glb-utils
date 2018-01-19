@@ -1,6 +1,7 @@
 const fs = require('fs')
 const path = require('path')
-const GLBWriter = require('../glb-writer')
+const GLB = require('../lib/glb')
+const GLBWriter = require('../lib/glb-writer')
 const readline = require('readline')
 
 const opts = require('command-line-args')([
@@ -79,9 +80,6 @@ lineReader.on('close', () => {
       name: "default",
       pbrMetallicRougness: {
         baseColorFactor: [1, 1, 1]
-      },
-      emissiveTexture: {
-        index: 0
       },
       emissiveFactor: [1, 1, 1]
     }],
@@ -162,16 +160,9 @@ lineReader.on('close', () => {
   }, true)
   console.log("Indices: ", indices.length)
   
-  const textureData = fs.readFileSync(tex)
-  addTexture(textureData)
-  
   json.buffers.push({
     byteLength: buffer.byteLength
   })
   
-  GLBWriter({
-    json: json,
-    content: JSON.stringify(json),
-    buffers: [buffer]
-  }, dst)
+  GLBWriter(new GLB(json, buffer), dst)
 })
