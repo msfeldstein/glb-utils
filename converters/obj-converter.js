@@ -78,10 +78,11 @@ lineReader.on('close', () => {
     }],
     materials: [{
       name: "default",
-      pbrMetallicRougness: {
-        baseColorFactor: [1, 1, 1]
-      },
-      emissiveFactor: [1, 1, 1]
+      pbrMetallicRoughness: {
+        baseColorTexture: {
+          index: 0
+        }
+      }
     }],
     textures: [],
     meshes: [
@@ -159,10 +160,15 @@ lineReader.on('close', () => {
     count: indices.length
   }, true)
   console.log("Indices: ", indices.length)
+
+  addTexture(fs.readFileSync(tex))
   
   json.buffers.push({
     byteLength: buffer.byteLength
   })
+  console.log(json)
+
+
   
   GLBWriter(new GLB(json, buffer), dst)
 })
