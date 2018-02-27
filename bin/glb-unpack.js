@@ -25,13 +25,13 @@ if (glb.json.images) {
   glb.json.images.forEach(function(image) {
     const imageOut = path.join(path.dirname(src), image.name ? image.name : `${nextNameIndex++}.${image.mimeType ? image.mimeType.split('/')[1] : 'png'}`)
     let imageData = null
-    if (image.uri.indexOf('data:') == 0) {
+    if (image.uri && image.uri.indexOf('data:') == 0) {
     	const imageInfo = ImageDataUri.decode(image.uri)
     	imageData = imageInfo.dataBuffer
     } else {
     	const bufferView = glb.json.bufferViews[image.bufferView]
     	const buffer = glb.buffers[bufferView.buffer]
-    	const imageData = Buffer.alloc(bufferView.byteLength)
+    	imageData = Buffer.alloc(bufferView.byteLength)
     	buffer.copy(imageData, 0, bufferView.byteOffset, bufferView.byteOffset + bufferView.byteLength)	
     }
     
